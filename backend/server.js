@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { ConnectDb } from './config/db.js'
+import authRoute from './routes/authRoute.js'
 
 dotenv.config()
 
@@ -17,13 +18,11 @@ app.use(cors())
 
 ConnectDb()
 
-app.get('/', (req,res) => {
-    res.send(`Hello fromServer`)
-})
+
 
 const port = process.env.PORT
 
-
+app.use("/api/auth", authRoute)
 
 
 app.listen(port, () => {
