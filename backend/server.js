@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import { ConnectDb } from './config/db.js'
 
 dotenv.config()
 
@@ -13,6 +14,8 @@ app.use(cookieParser())
 app.use(cors())
 
 // connect to db
+
+ConnectDb()
 
 app.get('/', (req,res) => {
     res.send(`Hello fromServer`)
