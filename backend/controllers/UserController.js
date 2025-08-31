@@ -87,3 +87,14 @@ export const LogoutUser =  async (req,res) => {
         expires : new Date(0)
     })
 }
+
+
+
+export const getUserProfile = async (req,res) => {
+  res.status(200).json({
+    id: req.user._id,
+    userName : req.user.userName,
+    email: req.user.email,
+    contactNumber: req.user.contactNumber,
+  })
+}
