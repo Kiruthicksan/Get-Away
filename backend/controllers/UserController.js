@@ -1,6 +1,11 @@
 import { User } from "../models/userSchema.js";
 import generateToken from "../utils/genrateToken.js";
 
+const isAdminEmail = (email) => {
+  return email.toLowerCase().endsWith('@getaway.com')
+}
+
+
 export const RegisterUser = async (req, res) => {
   try {
     const { userName, email, contactNumber, password } = req.body;
@@ -15,7 +20,7 @@ export const RegisterUser = async (req, res) => {
         .json({ message: "EmailId is already Registered. Try Logging In" });
     }
 
-    // validate ContactNumber format
+    const role = isAdminEmail(email) ? "admin" : "passenger"
 
     // create a new user
 
@@ -24,6 +29,7 @@ export const RegisterUser = async (req, res) => {
       email,
       contactNumber,
       password, // passsword will be hashed by presave middleware
+      role,
     });
 
     generateToken(res, newUser._id);
@@ -32,7 +38,8 @@ export const RegisterUser = async (req, res) => {
         user: {
             id: newUser._id,
             userName: newUser.userName,
-            email: newUser.email
+            email: newUser.email,
+            role: newUser.role,
         }
     });
   } catch (error) {
@@ -59,17 +66,18 @@ export const LoginUser = async (req, res) => {
     if (!isMatch){
        return res.status(400).json({message : "Invalid Password"})
     }
-
-    // jwt token
+     
+    
 
     generateToken(res, existingUser._id )
 
 
-    res.status(201).json({message: "Login Successful" ,
+    res.status(200).json({message: "Login Successful" ,
          user: {
             id: existingUser._id,
             userName: existingUser.userName,
-            email: existingUser.password
+            email: existingUser.email,
+            role : existingUser.role
         }
     })
     
@@ -83,9 +91,9 @@ export const LogoutUser =  async (req,res) => {
     res.cookie('token', "" , {
         httpOnly : true,
         secure : process.env.NODE_ENV !== 'development',
-        sameSite: 'stict',
+        sameSite: 'strict',
         expires : new Date(0)
-    })
+    }).json({message: "Logout Successful"})
 }
 
 
@@ -96,5 +104,6 @@ export const getUserProfile = async (req,res) => {
     userName : req.user.userName,
     email: req.user.email,
     contactNumber: req.user.contactNumber,
+    role : req.user.role
   })
 }

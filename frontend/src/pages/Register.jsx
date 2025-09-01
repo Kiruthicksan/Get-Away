@@ -3,14 +3,20 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useState } from "react";
 import logo from "../assets/logo.png";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/Context";
+import { api } from "../services/api";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { setUser, setIsAuthenticated } = useAuth();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm({
     defaultValues: {
       userName: "",
@@ -21,8 +27,17 @@ const Register = () => {
   });
 
   const onSubmit = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(data);
+    try {
+      const response = await api.post("/auth/register", data);
+
+      
+
+      navigate("/");
+    } catch (error) {
+      setError("root", {
+        message: error.response?.data.message || "Registration failed",
+      });
+    }
   };
 
   return (
@@ -72,7 +87,9 @@ const Register = () => {
             />
             <div className="h-5">
               {errors.userName && (
-                <p className="text-xs text-red-500">{errors.userName.message}</p>
+                <p className="text-xs text-red-500">
+                  {errors.userName.message}
+                </p>
               )}
             </div>
           </div>
@@ -102,7 +119,7 @@ const Register = () => {
             />
             <div className="h-5">
               {errors.email && (
-                <p className="text-xs text-red-500">{errors.email.message}</p>
+                <p className="text-xs mt-2 text-red-500">{errors.email.message}</p>
               )}
             </div>
           </div>
@@ -144,7 +161,9 @@ const Register = () => {
             </div>
             <div className="h-5">
               {errors.password && (
-                <p className="text-xs text-red-500">{errors.password.message}</p>
+                <p className="text-xs text-red-500">
+                  {errors.password.message}
+                </p>
               )}
             </div>
           </div>
@@ -163,7 +182,7 @@ const Register = () => {
               {...register("contactNumber", {
                 required: "Phone Number is required",
                 pattern: {
-                  value: /^[0-9]{10}$/,
+                  value: /^[\+]?[1-9]\d{0,14}$/,
                   message: "Invalid phone number",
                 },
               })}
@@ -188,16 +207,27 @@ const Register = () => {
             className="w-full bg-blue-500 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             whileTap={{ scale: 0.98 }}
           >
-            {isSubmitting ? "Creating Account..." : "Create Account"}
+            {isSubmitting ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                Creating Account...
+              </>
+            ) : (
+              "Create Account"
+            )}
           </motion.button>
         </form>
-
+        {errors.root && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {errors.root.message}
+          </div>
+        )}
         {/* Sign in link */}
         <div className="mt-4 text-center text-sm text-gray-500">
-          Already have an account?{" "}
+          Already have an account?
           <a
             href="/login"
-            className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+            className="text-blue-600 hover:text-blue-800 font-medium transition-color pl-2"
           >
             Sign in
           </a>
