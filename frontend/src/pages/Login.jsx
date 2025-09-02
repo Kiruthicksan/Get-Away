@@ -3,12 +3,14 @@ import { useForm } from "react-hook-form";
 import logo from "../assets/logo.png";
 import { useState } from "react";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
-import { api } from "../services/api";
+
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate()
+   const { login } = useAuth()
 
   const {
     register,
@@ -22,8 +24,20 @@ const Login = () => {
   });
 
   const onSubmit = async (data) => {
-     const response = await api.post('auth/login', data)
-     navigate('/')
+   
+    try{
+         await login(data.email, data.password)
+       
+        
+       
+         navigate('/')
+          
+    }catch{
+      console.log("Login Error", errors)
+     
+    }
+   
+    
      
   };
 
@@ -128,10 +142,12 @@ const Login = () => {
             className="w-full bg-blue-500 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             whileTap={{ scale: 0.98 }}
           >
-            {isSubmitting ? "Creating Account..." : "Create Account"}
+            {isSubmitting ? "Logging..." : "Sign In"}
           </motion.button>
         </form>
 
+            
+        
         {/* Register Link */}
 
         <div className="mt-4 text-center text-sm text-gray-500">

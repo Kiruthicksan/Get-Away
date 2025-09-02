@@ -4,13 +4,13 @@ import { useState } from "react";
 import logo from "../assets/logo.png";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/Context";
+import { useAuth } from "../context/useAuth";
 import { api } from "../services/api";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const { setUser, setIsAuthenticated } = useAuth();
+  const { login } = useAuth(); 
 
   const {
     register,
@@ -28,14 +28,16 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
+      // ✅ Use the login function after successful registration
       const response = await api.post("/auth/register", data);
-
       
-
+      // ✅ Automatically log the user in with the same credentials
+      await login(data.email, data.password);
+      
       navigate("/");
     } catch (error) {
       setError("root", {
-        message: error.response?.data.message || "Registration failed",
+        message: error.response?.data?.message || "Registration failed", // ✅ Added optional chaining
       });
     }
   };
@@ -222,7 +224,7 @@ const Register = () => {
             {errors.root.message}
           </div>
         )}
-        {/* Sign in link */}
+        {/* Sign in link - Use Link instead of <a> for SPA navigation */}
         <div className="mt-4 text-center text-sm text-gray-500">
           Already have an account?
           <a
