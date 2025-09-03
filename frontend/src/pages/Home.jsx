@@ -3,13 +3,14 @@ import React from "react";
 import {useAuth} from "../context/useAuth";
 import AdminHome from "./AdminHome";
 import PassengerHome from "./PassengerHome";
+import GuestHome from "./Home/GuestHome";
 
 
 
 
 
 const Home = () => {
-  const { isAdmin, loading, user } = useAuth();
+  const { isAdmin, loading,  isAuthenticated } = useAuth();
 
   if (loading) {
     return (
@@ -19,11 +20,16 @@ const Home = () => {
     );
   }
 
-  return (
   
+
+    if(!isAuthenticated){
+      return <GuestHome />
+    }
+
+      
     isAdmin() ? <AdminHome />  : <PassengerHome />
 
-  )
+  
 
 
 

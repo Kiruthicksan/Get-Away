@@ -14,3 +14,5 @@ const AdminRoute = ({children}) => {
 
   return isAuthenticated && isAdmin() ? children: <Navigate to = "/unauthorized" replace />
 }
+
+export default AdminRoute

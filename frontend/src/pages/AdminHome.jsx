@@ -1,10 +1,11 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
+
+import MainNavbar from '../components/navbar/MainNavbar'
 
 const AdminHome = () => {
   return (
     <div>
-        <Navbar />
+       
     </div>
   )
 }
