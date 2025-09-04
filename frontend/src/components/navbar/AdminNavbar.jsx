@@ -1,25 +1,8 @@
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import logo from "../../assets/logo.png";
-import { motion } from "framer-motion";
 import { useState } from "react";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
-
-const logoVariants = {
-  hover: { scale: 1.05, rotate: -2 },
-  tap: { scale: 0.95 },
-};
-
-const navItemVariants = {
-  hover: { scale: 1.05, y: -2 },
-  tap: { scale: 0.95 },
-};
-
-const avatarVariants = {
-  initial: { scale: 1 },
-  hover: { scale: 1.1, rotate: 5 },
-  tap: { scale: 0.9 },
-};
 
 const AdminNavbar = () => {
   const { user, logout } = useAuth();
@@ -33,162 +16,97 @@ const AdminNavbar = () => {
       console.error("Logout failed:", error);
     }
   };
+
   return (
-    <nav className="sticky top-0 z-50 bg-[#1D3557] backdrop:blur-md border-b border-gray-100 shadow-sm">
+    <nav className="sticky top-0 z-50 bg-gray-900 border-b border-gray-700 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 ">
-          {/* Brand logo */}
-          <motion.div variants={logoVariants} whileHover="hover" whileTap="tap">
-            <Link to="/">
-              <img
-                src={logo}
-                alt="logo"
-                className="h-10 w-full bg-white rounded-2xl p-2"
-              />
-            </Link>
-          </motion.div>
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/">
+            <img
+              src={logo}
+              alt="logo"
+              className="h-10 w-full bg-white rounded-2xl p-2"
+            />
+          </Link>
 
           {/* Navigation links */}
           <div className="hidden md:flex items-center space-x-8">
-            <motion.div
-              variants={navItemVariants}
-              whileHover="hover"
-              whileTap="tap"
-            >
+            {[
+              { to: "/", label: "Dashboard" },
+              { to: "/flights", label: "Flights" },
+              { to: "/manage-bookings", label: "Manage Bookings" },
+              { to: "/reports", label: "Reports" },
+            ].map((item) => (
               <NavLink
-                to="/"
-                className="text-white relative font-medium text-md hover:text-[#457B9D]"
+                key={item.to}
+                to={item.to}
+                className="text-gray-300 font-medium hover:text-white transition duration-200"
               >
-                Dashboard
+                {item.label}
               </NavLink>
-            </motion.div>
-
-            <motion.div
-              variants={navItemVariants}
-             
-            >
-              <NavLink
-                to="/flights"
-                className="text-white relative font-medium text-md hover:text-[#457B9D]"
-              >
-                Flights
-              </NavLink>
-            </motion.div>
-
-            <motion.div
-              variants={navItemVariants}
-             
-            >
-              <NavLink
-                to="/manage-bookings"
-                className="text-white relative font-medium text-md hover:text-[#457B9D]"
-              >
-                Manage Bookings
-              </NavLink>
-            </motion.div>
-
-            <motion.div
-              variants={navItemVariants}
-              
-            >
-              <NavLink
-                to="/reports"
-                className="text-white relative font-medium text-md hover:text-[#457B9D]"
-              >
-                Reports
-              </NavLink>
-            </motion.div>
+            ))}
           </div>
 
-          {/* Profile Buttons */}
-
+          {/* Profile & Menu */}
           <div className="flex gap-6 items-center">
+            {/* Mobile Menu Toggle */}
             <div className="md:hidden">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-white text-2xl font-extrabold items-center"
-               
+                className="text-gray-300 text-2xl"
               >
-                {isMenuOpen ? (
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <HiX />
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <HiOutlineMenu />
-                  </motion.span>
-                )}
+                {isMenuOpen ? <HiX /> : <HiOutlineMenu />}
               </button>
             </div>
-            <motion.div
-              variants={avatarVariants}
-             
+
+            {/* Profile Avatar */}
+            <div
               className="cursor-pointer"
               onClick={() => setIsProfileOpen(!isProfileOpen)}
             >
-              <div className="bg-[#E63946] w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+              <div className="bg-indigo-600 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
                 {user?.userName?.charAt(0)?.toUpperCase()}
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* DropDown Menu */}
-
+      {/* Profile Dropdown */}
       {isProfileOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="absolute right-10 mt-2 w-40 bg-white rounded-lg shadow-lg text-black"
-        >
-          <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100">
+        <div className="absolute right-10 mt-2 w-40 bg-gray-800 rounded-lg shadow-lg text-gray-300 border border-gray-700">
+          <Link to="/profile" className="block px-4 py-2 hover:bg-gray-700">
             Profile
           </Link>
           <button
             onClick={handleLogout}
-            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+            className="block w-full text-left px-4 py-2 hover:bg-gray-700"
           >
             Logout
           </button>
-        </motion.div>
+        </div>
       )}
 
+      {/* Mobile Menu */}
       {isMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="md:hidden bg-[#1D3557] p-4 space-y-4 text-center"
-        >
-          <Link
-            className="block text-white hover:text-[#457B9D]"
-            to="/dashboard"
-          >
+        <div className="md:hidden bg-gray-900 p-4 space-y-4 text-center border-t border-gray-700">
+          <Link className="block text-gray-300 hover:text-white" to="/dashboard">
             Dashboard
           </Link>
-          <Link className="block text-white hover:text-[#457B9D]" to="/flights">
+          <Link className="block text-gray-300 hover:text-white" to="/flights">
             Flights
           </Link>
           <Link
-            className="block text-white hover:text-[#457B9D]"
+            className="block text-gray-300 hover:text-white"
             to="/manage-bookings"
           >
             Manage Bookings
           </Link>
-          <Link className="block text-white hover:text-[#457B9D]" to="/reports">
+          <Link className="block text-gray-300 hover:text-white" to="/reports">
             Reports
           </Link>
-        </motion.div>
+        </div>
       )}
     </nav>
   );

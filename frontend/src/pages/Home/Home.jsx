@@ -1,9 +1,9 @@
-import React from "react";
 
-import {useAuth} from "../context/useAuth";
+
+import {useAuth} from "../../context/useAuth";
 import AdminHome from "./AdminHome";
 import PassengerHome from "./PassengerHome";
-import GuestHome from "./Home/GuestHome";
+import GuestHome from "./GuestHome";
 
 
 
@@ -27,7 +27,7 @@ const Home = () => {
     }
 
       
-    isAdmin() ? <AdminHome />  : <PassengerHome />
+    return isAdmin() ? <AdminHome />  : <PassengerHome />
 
   
 
