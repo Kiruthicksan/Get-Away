@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
   const {
@@ -8,6 +9,7 @@ const Search = () => {
     formState: { errors, isSubmitting },
   } = useForm();
 
+    const navigate = useNavigate()
   const [fromSearch, setFromSearch] = useState("");
   const [toSearch, setToSearch] = useState("");
   const [showFromOptions, setShowFromOptions] = useState(false);
@@ -235,7 +237,7 @@ const Search = () => {
             <div>
               <button
                 className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-all duration-300"
-                onClick={() => alert(`Booking flight: ${flight.flightName}`)}
+                onClick={() => navigate('/booking-form/:id')}
               >
                 Book Now
               </button>

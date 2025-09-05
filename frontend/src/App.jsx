@@ -9,6 +9,8 @@ import MainNavbar from "./components/navbar/MainNavbar";
 import AdminRoute from "./components/AdminRoute";
 import AdminFlightManagement from "./pages/AdminFlightManagement";
 import FlightsTable from "./pages/Flights";
+import BookingForm from "./pages/BookingForm";
+import BookingConfirmation from "./pages/BookingConfirmation";
 
 const App = () => {
   return (
@@ -24,7 +26,7 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route
-                    path="/mybookings"
+                    path="/my-bookings"
                     element={
                       <ProtectedRoute>
                         <MyBookings />
@@ -44,6 +46,8 @@ const App = () => {
                       <FlightsTable />
                     </ProtectedRoute>
                   } />
+                  <Route path="/booking-form/:id" element={<BookingForm />} />
+        <Route path="/booking-confirmation" element={<BookingConfirmation />} />
                 </Routes>
               </>
             }

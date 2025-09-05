@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const FlightsTable = () => {
   const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchFlights = async () => {
@@ -60,7 +63,7 @@ const FlightsTable = () => {
                   </td>
                   <td className="px-4 py-3 border-b border-gray-600 text-center">
                     <button
-                      onClick={() => alert(`Booking flight: ${flight.flightName}`)}
+                      onClick={() => navigate('/booking-form/:id')}
                       className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md"
                     >
                       Book
