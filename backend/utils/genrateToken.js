@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { StrictMode } from "react";
+
 
 const generateToken = (res, userId) => {
   // creating token
