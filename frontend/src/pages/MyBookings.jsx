@@ -9,7 +9,7 @@ const MyBookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/bookings/my", { withCredentials: true });
+        const res = await axios.get("https://get-away.onrender.com/api/bookings/my", { withCredentials: true });
         setBookings(res.data);
       } catch (error) {
         console.error("Error fetching bookings:", error);

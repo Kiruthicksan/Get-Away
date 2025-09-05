@@ -15,7 +15,7 @@ const AdminFlightManagement = () => {
   const fetchFlights = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/api/flights");
+      const res = await axios.get("https://get-away.onrender.com/api/flights");
       setFlights(res.data);
       setError("");
     } catch (err) {

@@ -39,7 +39,7 @@ export default function BookingForm() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5000/api/bookings", {
+      const response = await axios.post("https://get-away.onrender.com/api/bookings", {
         flightId: flight._id,
         passengerName: formData.name,
         contactNumber: formData.contact,

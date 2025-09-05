@@ -62,23 +62,23 @@ export const AuthProvider = ({ children }) => {
 
   // Logout function - FIXED
   const logout = async () => {
-  console.log("🚀 logout() started");
+
   try {
-    console.log("🔄 Setting loading: true");
+   
     setLoading(true);
     
-    console.log("📡 Calling API: /auth/logout");
+   
     await api.post("/auth/logout");
-    console.log("✅ API call successful");
+   
     
   } catch (error) {
-    console.error("❌ API call failed:", error);
+    console.error(" API call failed:", error);
   } finally {
-    console.log("🧹 Finally block - cleaning up state");
+   
     setUser(null);
     setIsAuthenticated(false);
     setLoading(false);
-    console.log("🎉 logout() completed");
+    
   }
 };
 

@@ -67,7 +67,7 @@ const Search = () => {
       }).toString();
 
       const response = await fetch(
-        `http://localhost:5000/api/flights/search?${queryParams}`
+        `https://get-away.onrender.com/api/flights/search?${queryParams}`
       );
 
       if (!response.ok) {

@@ -56,9 +56,9 @@ const AdminHome = () => {
           <h2 className="text-lg font-semibold mb-4 text-white">Recent Activity</h2>
           <div className="space-y-2">
             {[
-              "New booking request from John Doe",
+              "New booking request from Vijay",
               "Flight AI-101 scheduled for today",
-              "Booking approved for Jane Smith",
+              "Booking approved for Ajith",
             ].map((activity, index) => (
               <div
                 key={index}
