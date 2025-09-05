@@ -28,6 +28,7 @@ ConnectDb()
 const port = process.env.PORT
 
 app.use("/api/auth", authRoute)
+app.use("/api", authRoute)
 
 
 

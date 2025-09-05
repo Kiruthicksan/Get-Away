@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import { useAuth } from "../../context/useAuth";
 import { useState, useMemo } from "react";
 
 const Search = () => {
@@ -13,6 +12,10 @@ const Search = () => {
   const [toSearch, setToSearch] = useState("");
   const [showFromOptions, setShowFromOptions] = useState(false);
   const [showToOptions, setShowToOptions] = useState(false);
+
+  const [flights, setFlights] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const cities = [
     "Mumbai",
@@ -40,8 +43,43 @@ const Search = () => {
     );
   }, [toSearch]);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    if (!fromSearch || !toSearch) {
+      setError("Please select both From and To cities");
+      return;
+    }
+    if (fromSearch === toSearch) {
+      setError("From and To cities cannot be the same");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+    setFlights([]);
+
+    try {
+      const queryParams = new URLSearchParams({
+        from: fromSearch,
+        to: toSearch,
+        journeyDate: data.date, 
+      }).toString();
+
+      const response = await fetch(
+        `http://localhost:5000/api/flights/search?${queryParams}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch flights");
+      }
+
+      const result = await response.json();
+      setFlights(Array.isArray(result) ? result : []);
+    } catch (err) {
+      console.error("Error fetching flights:", err);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -142,17 +180,77 @@ const Search = () => {
             </div>
           </div>
 
+          {error && (
+            <p className="text-red-400 text-center mt-4">{error}</p>
+          )}
+
           <div className="mt-6 text-center">
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || loading}
               className="bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 px-8 rounded-lg transition duration-300"
             >
-              {isSubmitting ? "Searching..." : "Search Flights"}
+              {loading ? "Searching..." : "Search Flights"}
             </button>
           </div>
         </form>
       </div>
+
+      {/* Results Section */}
+      <div className="mt-6">
+  {loading && (
+    <p className="text-gray-400 text-center text-lg animate-pulse">
+      Loading flights...
+    </p>
+  )}
+
+  {!loading && flights.length > 0 && (
+    <div>
+      <h3 className="text-2xl font-semibold text-gray-100 mb-6 text-center">
+        Available Flights
+      </h3>
+
+      <div className="space-y-4">
+        {flights.map((flight) => (
+          <div
+            key={flight._id}
+            className="bg-gradient-to-r from-gray-800 to-gray-900 p-5 rounded-lg shadow-lg flex justify-between items-center border border-gray-700 hover:border-amber-500 transition-all duration-300"
+          >
+            {/* Flight Info */}
+            <div>
+              <h3 className="text-xl font-bold text-amber-400">
+                {flight.flightName} ({flight.flightNumber})
+              </h3>
+              <p className="text-gray-300">
+                <span className="font-medium">{flight.from}</span> →{" "}
+                <span className="font-medium">{flight.to}</span>
+              </p>
+              <p className="text-gray-400 text-sm">Date: {flight.journeyDate}</p>
+              <p className="text-gray-400 text-sm">
+                Price: <span className="text-green-400 font-semibold">₹{flight.price}</span>
+              </p>
+            </div>
+
+            {/* Book Button */}
+            <div>
+              <button
+                className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-all duration-300"
+                onClick={() => alert(`Booking flight: ${flight.flightName}`)}
+              >
+                Book Now
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {!loading && flights.length === 0 && (
+    <p className="text-center text-gray-400 mt-6 text-lg">No flights available.</p>
+  )}
+</div>
+
     </div>
   );
 };
